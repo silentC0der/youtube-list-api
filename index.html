@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>    
+    <div id="demo">
+    <div id="myImg"></div>
+</div>
+<script>
+    function youtubeApiCall() {
+        $.ajax({
+            cache: false,
+            data: $.extend({
+                key: 'AIzaSyAA_Y_JoYnez4EUFCr606kgSOhOD9oLGTo',
+                channelId: 'UC50vsde3vrL-OXK3t61dZPQ',
+                part: 'snippet'
+            }, {
+                maxResults: 50
+            }),
+            dataType: 'json',
+            type: 'GET',
+            timeout: 5000,
+            url: 'https://www.googleapis.com/youtube/v3/search'
+        }).done(function(data) {
+            console.log('data from youtube api:', data);
+            if(data && data.items) {
+                var htmlStr = '';
+                htmlStr+= '<div id="design-cast">';
+                htmlStr+= '<h1>ECA Lectures</h1>';
+                for(let i= 0;i<data.items.length; i++){
+                const item = data.items[i]; 
+                const vid = item.id.videoId;
+                if(vid) {
+                    const imageHref = 'https://www.youtube.com/embed/'+vid+'';
+                    const title = item.snippet.title;
+                    const description = item.snippet.description;
+                    const imageSRC = item.snippet.thumbnails.high.url ? item.snippet.thumbnails.high.url : item.snippet.thumbnails.default.url;
+                    htmlStr+= '<div class="member">';
+                    htmlStr+= '<a target ="new" href='+imageHref+'>';
+                    htmlStr+= '<img src='+imageSRC+' class="img-responsive img-thumbnail" alt="Responsive image" />';
+                    htmlStr+= '<div class="name1">'+description && description !== "" ? description : title+'';
+                    htmlStr+= '</a>';
+                    htmlStr+= '</div>'
+                    console.log(htmlStr);
+                }
+            }
+            htmlStr+= '</div>';
+            $( "#myImg" ).append(htmlStr);
+        }
+    });
+ }
+ youtubeApiCall();
+</script>
+
+<style type="text/css">
+    #design-cast {
+    position: relative;
+    overflow: hidden;
+    }
+    .member {
+        float:left;
+        width:31%;
+        margin:1% 1% 45px 1%;
+    }
+    .name {
+        position:absolute;
+        bottom:0px;
+    }
+    .member img {
+        width: 100%;
+        display: block;
+    }
+</style>
+
+</body>
+</html>
+
+
